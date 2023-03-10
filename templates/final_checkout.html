@@ -39,6 +39,8 @@
               </div>
               <span class="text-muted">₦{{ order_item.get_final_price }}</span>
             </li>   
+
+            
             {% endfor %} 
             
           <!-- Cart -->
@@ -75,16 +77,16 @@
 <script>
   function payWithPaystack(){
     var handler = PaystackPop.setup({
-      key: 'pk_test_3f7e5637d0d1c970683fa7b4423675a92c4119a4',
+      key: 'pk_test_f5cdbd180a4cab77eb2125ba185f2177f5314298',
       email: '{{user.email}}',
       amount: {{order.get_total}} * 100,
       ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
       metadata: {
          custom_fields: [
             {
-                display_name: "Samuel Dave",
+                display_name: "Adedotun Adeyemi",
                 variable_name: "mobile_number",
-                value: "+2348012345678"
+                value: "+2349051485282"
             }
          ]
       },

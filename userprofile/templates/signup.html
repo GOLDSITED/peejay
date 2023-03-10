@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="columns">
+    <div class="column is-6 is-offset-3">
+       
+        
+
+        <form method="post" action=".">
+            {% csrf_token %}
+    
+            {{ form|crispy }}
+
+            {{ userprofileform|crispy }}
+    
+            <div class="field">
+                <div class="control">
+                    <button class='btn btn-primary' type="submit"> Sign Up &raquo;</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

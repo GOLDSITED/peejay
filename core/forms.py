@@ -1,4 +1,7 @@
 from django import forms
+from django.forms import ModelForm, Textarea
+from . models import Item
+from .models import Contact
 
 
 class CheckoutForm(forms.Form):
@@ -16,6 +19,29 @@ class CheckoutForm(forms.Form):
 		}))
 	set_default_shipping = forms.BooleanField(required=False)
 	use_default_shipping = forms.BooleanField(required=False)
-	
+
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = ['title','price','discount_price', 'slug','description','image','category','is_featured', 'num_available','thumbnail']
+        widgets = {
+            
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+			'price': forms.TextInput(attrs={'class': 'form-control'}),
+			'discount_price': forms.TextInput(attrs={'class': 'form-control'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+			'num_available': forms.TextInput(attrs={'class': 'form-control'}),
+			'thumbnail': forms.FileInput(attrs={'class': 'form-control'}),
+            
+
+		}
+
+class ContactForm(ModelForm):
+    class Meta:
+        model = Contact
+        fields = '__all__'
 	
 

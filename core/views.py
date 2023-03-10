@@ -10,10 +10,27 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CheckoutForm
-from pypaystack import Transaction
+from django.db.models import Q
+from . forms import ItemForm
+from django.core.paginator import Paginator,  PageNotAnInteger, EmptyPage
+from django.views.generic.edit import UpdateView,DeleteView
 from django.http import JsonResponse
 import json
+from .forms import ContactForm
 from .filters import ItemFilter
+
+from io import BytesIO
+
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.template.loader import get_template
+from django.http import HttpResponse
+
+from xhtml2pdf import pisa
+
+from .models import Order
+       
+
 # Create your views here.
 
 # def search_products(request):
@@ -119,17 +136,21 @@ class CheckoutView(View):
 			return redirect('checkout')
 
 class HomeView(ListView):
+	
 	def get(self, *args, **kwargs):
 		Items = Item.objects.all()
 		myfilter = ItemFilter(self.request.GET, queryset = Items)
 		Items = myfilter.qs
 		context = {'Item':Items, 'myfilter':myfilter}
+		
 		return render(self.request, "home-page.html", context)
-	
+
+
 
 class ItemDetailView(DetailView):
 	model = Item
 	template_name = "product-page.html"
+	
 
 @login_required
 def add_to_cart(request, slug):
@@ -268,10 +289,73 @@ class PaymentView(View):
 			messages.danger(self.request, "Could not verify the transaction")
 			return redirect("/")
 
+def addproducts(request):
+    form = ItemForm()
+
+    if request.method =='POST':
+        form = ItemForm(request.POST, request.FILES)
+        if form.is_valid:
+            form.save()
+            return redirect('home_page')
+    else:
+        form = ItemForm()
+
+    context = {
+        "form":form
+    }
+    return render(request, 'addproducts.html', context)
 
 
+def delete_product(request,id):
+    item = Item.objects.get(id=id)
+    context={
+        'item':item,
+    }
+    if request.method =='POST':
+        item.delete()
+        return redirect('home_page')
+    return render (request,'delete.html',context)
 
 
-		
+def my_listings(request):
+        items = Item.objects.filter(seller_name=request.user)
+        context ={
+            'items':items,
+        }
+        return render(request,'mylistings.html',context)
+
+
+class ProductUpdateView(UpdateView):
+    model = Item
+    fields = ['category','title','slug','description','price','discount_price','image','is_featured','num_available','thumbnail']
+    template_name = 'product_update.html'
+
+
+def about(request):
+    return render(request, 'about.html')
 
 	
+
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect( 'home_page')
+    form = ContactForm()
+    context = {'form': form}
+    return render(request, 'contact.html', context)
+
+
+
+class SearchResultsView(ListView):
+    model = Item
+    template_name = "search_results.html"
+
+    def get_queryset(self):  # new
+        query = self.request.GET.get("q")
+        object_list = Item.objects.filter(
+            Q(title__icontains=query) | Q(price__icontains=query)
+        )
+        return object_list

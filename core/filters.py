@@ -1,13 +1,15 @@
+
+
+from . models import Item
 import django_filters
-from django_filters import CharFilter
-from django.forms.widgets import TextInput
-from .models import *
+from django_filters.filters import RangeFilter
+
 
 class ItemFilter(django_filters.FilterSet):
-	title = CharFilter(field_name='title', lookup_expr='icontains', widget=TextInput(attrs={
-		'placeholder': 'search',
-		'class': 'form-control'
-		}))
-	class Meta:
-		model = Item
-		fields = ['title', 'category']
+    name = django_filters.CharFilter(lookup_expr='icontains')
+    price = RangeFilter()
+
+
+    class Meta:
+        model = Item
+        fields = ['title', 'price']

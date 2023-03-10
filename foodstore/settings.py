@@ -20,7 +20,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'crispy_forms',
     'core',
+    'coupon',
+    'userprofile',
     'django_filters',
+    'paystack',
     
 ]
 
@@ -75,10 +78,11 @@ DATABASES = {
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    
 )
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'home_page'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
@@ -87,8 +91,9 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
-PAYSTACK_PUBLIC_KEY = 'sk_test_4efc8832170a975a1e1eb669a89b512909d0049a' # paystack public key
-PAYSTACK_SCRET_KEY = 'pk_test_3f7e5637d0d1c970683fa7b4423675a92c4119a4' #paystack secret key
+PAYSTACK_PUBLIC_KEY = 'pk_test_f5cdbd180a4cab77eb2125ba185f2177f5314298' #paystack public key
+
+PAYSTACK_SECRET_KEY = 'sk_test_6088b1baeff8eb4819e78eae9fc74b895d11bd7f' # paystack secret key
 
 
 if ENVIRONMENT == 'production':
@@ -102,3 +107,6 @@ if ENVIRONMENT == 'production':
     SECURE_REDIRECT_EXEMPT = []
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 

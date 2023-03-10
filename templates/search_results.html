@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Search Results</h1>
+
+<ul>
+  {% for item in object_list %}
+    <li>
+     
+
+      <div class="col-lg-2 col-md-6 mb-8 py-5">
+
+        <!--Card-->
+        <div class="card">
+
+          <!--Card image-->
+          <div class="view overlay">
+            <img src="{{item.image.url}}" height="200" width="70" class="card-img-top"
+              alt="">
+            <a href="">
+              <div class="mask rgba-white-slight"></div>
+            </a>
+          </div>
+          <!--Card image-->
+
+          <!--Card content-->
+          <div class="card-body text-center">
+            <!--Category & Title-->
+            <a href="" class="grey-text">
+              <h5>{{ item.get_category_display }}</h5>
+            </a>
+            <h5>
+              <strong>
+                <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}
+                <div class="dark-grey-text">{{ item.is_featured }} </div>
+                  <span class="badge badge-pill {{ item.get_label_display }}-color">NEW</span>
+                </a>
+              </strong>
+            </h5>
+
+            <h4 class="font-weight-bold blue-text">
+            
+              <strong>₦
+              {% if item.discount_price %}
+                {{ item.discount_price }}
+              {% else %}
+                {{ item.price }}
+              {% endif %}
+            </strong>
+            </h4>
+
+          </div>
+          <!--Card content-->
+
+        </div>
+        <!--Card-->
+
+      </div>
+
+            
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

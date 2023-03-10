@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content  %}
+<div class="title is-5 "> 🎴My Listings</div>
+<div class="column is-multiline ">
+    {% for item in items %}
+    <div class="card card-product column is-5 px-5 py-5 ">
+        <span class="card-image ">
+            <img class="w-20 -20" src="{{item.image.url}}" alt="">
+        </span>
+        <span class=" column is 10 py-10 title is-5 ">
+            <div class="title is-5">{{item.title}}</div>
+            <div class="">$ {{item.price}}</div>
+            <div>{{item.description}}</div>
+        </span>
+        <span class="button is-success">
+            <a class="px-5 py-5 ml-5 " href="{% url 'update_product' item.id %}">Edit</a>
+        </span>
+        <span class="button is-success">
+            <a class=" mr-5 " href="{% url 'delete_product' item.id %}">Delete</a>
+        </span>
+    </div>
+</div>
+
+{% endfor %}
+{% endblock %}
+
+

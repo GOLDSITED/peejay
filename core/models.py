@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.shortcuts import reverse
+from django.contrib.auth.models import User
 # Create your models here.
 CATEGORY_CHOICES = (
 	('Shirt', 'Shirt'),
@@ -15,6 +16,7 @@ LABEL_CHOICES = (
 	)
 
 class Item(models.Model):
+	seller_name = models.ForeignKey(User, on_delete=models.CASCADE,default=1)
 	title = models.CharField(max_length=100)
 	price = models.FloatField()
 	discount_price = models.FloatField(blank=True, null=True)
@@ -23,7 +25,15 @@ class Item(models.Model):
 	slug = models.SlugField()
 	description = models.TextField()
 	image = models.ImageField(blank=True, null=True)
+	is_featured = models.BooleanField(default=False)
+	num_available = models.IntegerField(default=1)
+	date_added = models.DateTimeField(auto_now_add=True)
+	thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True)
 
+
+   
+
+	
 
 	def get_absolute_url(self):
 		return reverse("product_page", kwargs={'slug': self.slug})
@@ -36,6 +46,7 @@ class Item(models.Model):
 
 	def __str__(self):
 		return self.title
+
 
 class OrderItem(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -104,4 +115,24 @@ class Payment(models.Model):
 
 	def __str__(self):
 		return self.user.username
+
+ 
+class Contact(models.Model):
+    fullname = models.CharField(max_length=20, null=True)
+    phonenumber = models.CharField(max_length=11, null=True)
+    email = models.EmailField()
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+
+    def __str__(self):
+        return self.email
+
+class ItemReview(models.Model):
+    item = models.ForeignKey(Item, related_name='reviews', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='reviews', on_delete=models.CASCADE)
+
+    content = models.TextField(blank=True, null=True)
+    stars = models.IntegerField()
+
+    date_added = models.DateTimeField(auto_now_add=True)
 
